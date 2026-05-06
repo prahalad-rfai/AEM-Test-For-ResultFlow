@@ -1,7 +1,4 @@
 {
   "project": "AEM Test",
-  "host": "main--aem-test-for-resultflow--prahalad-rfai.aem.page",
-  "mountpoints": [
-    "https://drive.google.com/drive/folders/1iCpsoVfJ9MuwAnHwUufvvK0sXDZmv_pS"
-  ]
+  "host": "main--aem-test-for-resultflow--prahalad-rfai.aem.page"
 }
