@@ -38,8 +38,7 @@
 @media (width >= 600px) {
   .product .product-gallery-thumbs {
     flex-direction: column;
-    overflow-x: visible;
-    overflow-y: auto;
+    overflow: visible auto;
     max-height: 560px;
   }
 }

@@ -23,16 +23,16 @@
 }
 
 /* category card style when image + text in same col */
-.columns > div > div > picture + h3,
-.columns > div > div > picture + h2 {
-  margin-top: 16px;
-}
-
 .columns > div > div h3,
 .columns > div > div h2 {
   margin-bottom: 6px;
   font-size: var(--body-font-size-m);
   letter-spacing: -0.01em;
+}
+
+.columns > div > div > picture + h3,
+.columns > div > div > picture + h2 {
+  margin-top: 16px;
 }
 
 .columns > div > div p {

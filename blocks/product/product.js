@@ -7,6 +7,14 @@ function saveCart(cart) {
   document.dispatchEvent(new CustomEvent('cart-updated', { detail: cart }));
 }
 
+function updateCartCount() {
+  const cart = getCart();
+  const total = cart.reduce((sum, i) => sum + i.qty, 0);
+  document.querySelectorAll('.nav-cart-count').forEach((el) => {
+    el.textContent = total;
+  });
+}
+
 function addToCart(item) {
   const cart = getCart();
   const existing = cart.find((i) => i.id === item.id && i.size === item.size);
@@ -16,6 +24,7 @@ function addToCart(item) {
     cart.push({ ...item });
   }
   saveCart(cart);
+  updateCartCount();
 }
 
 function buildGallery(images) {
@@ -127,6 +136,9 @@ function buildCartNotification(name) {
 }
 
 export default function decorate(block) {
+  // sync cart count whenever the header finishes loading
+  document.addEventListener('cart-updated', updateCartCount);
+  updateCartCount();
   const [imgCol, detailCol] = [...block.firstElementChild.children];
 
   // --- gallery ---

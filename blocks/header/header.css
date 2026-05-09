@@ -304,3 +304,17 @@ header nav .nav-tools {
   align-items: center;
   gap: 16px;
 }
+
+header nav .nav-tools .nav-cart-link {
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+header nav .nav-tools .nav-cart-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
