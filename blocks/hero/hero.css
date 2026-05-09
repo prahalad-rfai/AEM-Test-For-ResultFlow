@@ -5,15 +5,77 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 480px;
+  padding: 60px 24px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* dark gradient overlay so text is always readable */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 20%) 0%,
+    rgb(0 0 0 / 45%) 100%
+  );
+  z-index: 0;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .hero h1 {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  color: var(--background-color);
+  max-width: 800px;
+  margin: 0 auto 0.5em;
+  color: #fff;
+  font-size: var(--heading-font-size-xl);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.hero p {
+  max-width: 600px;
+  margin: 0 auto 1.5em;
+  color: rgb(255 255 255 / 90%);
+  font-size: var(--body-font-size-s);
+}
+
+/* button inside hero */
+.hero .button-wrapper {
+  margin: 0;
+}
+
+.hero a.button.primary {
+  background-color: #fff;
+  border-color: #fff;
+  color: var(--text-color);
+  letter-spacing: 0.08em;
+}
+
+.hero a.button.primary:hover,
+.hero a.button.primary:focus-visible {
+  background-color: var(--light-color);
+  border-color: var(--light-color);
+}
+
+.hero a.button.secondary {
+  background-color: transparent;
+  border-color: #fff;
+  color: #fff;
+  letter-spacing: 0.08em;
+}
+
+.hero a.button.secondary:hover,
+.hero a.button.secondary:focus-visible {
+  background-color: rgb(255 255 255 / 15%);
 }
 
 .hero picture {
@@ -30,8 +92,19 @@
   height: 100%;
 }
 
+@media (width >= 600px) {
+  .hero {
+    min-height: 560px;
+  }
+
+  .hero h1 {
+    font-size: var(--heading-font-size-xxl);
+  }
+}
+
 @media (width >= 900px) {
   .hero {
-    padding: 40px 32px;
+    min-height: 640px;
+    padding: 80px 40px;
   }
 }

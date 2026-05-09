@@ -1,10 +1,13 @@
 .columns > div {
   display: flex;
   flex-direction: column;
+  gap: 32px;
 }
 
 .columns img {
   width: 100%;
+  border-radius: 4px;
+  display: block;
 }
 
 .columns > div > div {
@@ -19,11 +22,30 @@
   display: block;
 }
 
+/* category card style when image + text in same col */
+.columns > div > div > picture + h3,
+.columns > div > div > picture + h2 {
+  margin-top: 16px;
+}
+
+.columns > div > div h3,
+.columns > div > div h2 {
+  margin-bottom: 6px;
+  font-size: var(--body-font-size-m);
+  letter-spacing: -0.01em;
+}
+
+.columns > div > div p {
+  margin: 0;
+  color: var(--dark-color);
+  font-size: var(--body-font-size-xs);
+}
+
 @media (width >= 900px) {
   .columns > div {
-    align-items: center;
-    flex-direction: unset;
-    gap: 24px;
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 32px;
   }
 
   .columns > div > div {

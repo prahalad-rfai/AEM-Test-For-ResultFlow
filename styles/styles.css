@@ -12,12 +12,13 @@
 
 :root {
   /* colors */
-  --background-color: white;
-  --light-color: #f8f8f8;
-  --dark-color: #505050;
-  --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
+  --background-color: #fff;
+  --light-color: #f3f3f3;
+  --dark-color: #6d6d6d;
+  --text-color: #121212;
+  --link-color: #121212;
+  --link-hover-color: #6d6d6d;
+  --border-color: #e8e8e1;
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;
@@ -37,7 +38,7 @@
   --heading-font-size-xs: 22px;
 
   /* nav height */
-  --nav-height: 64px;
+  --nav-height: 72px;
 }
 
 /* fallback fonts */
@@ -156,7 +157,8 @@ button {
 /* links */
 a:any-link {
   color: var(--link-color);
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
   overflow-wrap: break-word;
 }
 
@@ -179,16 +181,20 @@ button.button {
   max-width: 100%;
   margin: 0;
   border: 2px solid transparent;
-  border-radius: 2.4em;
-  padding: 0.5em 1.2em;
+  border-radius: 4px;
+  padding: 0.6em 1.6em;
   font: inherit;
-  font-weight: 500;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   line-height: 1.25;
   text-decoration: none;
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 a.button[aria-disabled="true"],
@@ -297,7 +303,7 @@ main img {
 
 /* sections */
 main > .section {
-  margin: 40px 0;
+  margin: 56px 0;
 }
 
 main > .section > div {
@@ -311,8 +317,12 @@ main > .section:first-of-type {
 }
 
 @media (width >= 900px) {
+  main > .section {
+    margin: 80px 0;
+  }
+
   main > .section > div {
-    padding: 0 32px;
+    padding: 0 40px;
   }
 }
 
@@ -321,5 +331,12 @@ main .section.light,
 main .section.highlight {
   background-color: var(--light-color);
   margin: 0;
-  padding: 40px 0;
+  padding: 56px 0;
+}
+
+@media (width >= 900px) {
+  main .section.light,
+  main .section.highlight {
+    padding: 80px 0;
+  }
 }
