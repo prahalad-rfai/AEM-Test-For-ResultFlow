@@ -18,8 +18,9 @@ The repository provides the basic structure, blocks, and configuration needed to
 ## Setup Commands
 
 - Install dependencies: `npm install`
-- Start local development: `npx -y @adobe/aem-cli up --no-open --forward-browser-logs` (run in background, if possible)
-  - Install the AEM CLI globally by running `npm install -g @adobe/aem-cli` then `aem up` is equivalent to the command above
+- Start local development: `npm start` (run in background, if possible)
+  - This runs `aem up --no-open --forward-browser-logs --html-folder drafts` and serves draft HTML pages from the `drafts/` folder alongside the live code
+  - Alternatively: `npx -y @adobe/aem-cli up --no-open --forward-browser-logs --html-folder drafts`
   - The dev server runs at `http://localhost:3000` with auto-reload. Open it in playwright, puppeteer, or a browser. If none are available, ask the human to open it and give feedback.
 - Run linting before committing: `npm run lint`
 - Auto-Fix linting issues: `npm run lint:fix`
