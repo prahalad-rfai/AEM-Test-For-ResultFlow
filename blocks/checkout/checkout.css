@@ -20,6 +20,11 @@
   border-bottom: 1px solid var(--border-color, #e8e8e8);
 }
 
+.checkout-summary h2 {
+  margin: 0 0 20px;
+  font-size: var(--heading-font-size-s);
+}
+
 .checkout-form h2:first-child {
   margin-top: 0;
 }
@@ -77,11 +82,6 @@
   border-radius: 4px;
   padding: 28px 24px;
   align-self: start;
-}
-
-.checkout-summary h2 {
-  margin: 0 0 20px;
-  font-size: var(--heading-font-size-s);
 }
 
 .checkout-summary-items {
