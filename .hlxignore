@@ -5,3 +5,10 @@ LICENSE
 package.json
 package-lock.json
 test/*
+index.html
+nav.html
+cart.html
+checkout.html
+order-confirmation.html
+collections/
+products/
