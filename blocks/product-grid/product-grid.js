@@ -117,7 +117,9 @@ export default function decorate(block) {
     const price = parseFloat(priceLabel.replace(/[^0-9.]/g, '')) || 0;
     const sizes = [...(detailsCell?.querySelectorAll('li') || [])].map((li) => li.textContent.trim());
     const href = detailsCell?.querySelector('a')?.getAttribute('href') || '#';
-    return { image: img?.src || '', alt: img?.alt || name, name, description, priceLabel, price, sizes, href };
+    return {
+      image: img?.src || '', alt: img?.alt || name, name, description, priceLabel, price, sizes, href,
+    };
   });
 
   // Toolbar

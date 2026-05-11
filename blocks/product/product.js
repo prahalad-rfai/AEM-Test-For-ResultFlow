@@ -42,7 +42,7 @@ function buildGallery(images) {
   thumbs.className = 'product-gallery-thumbs';
   images.forEach((img, i) => {
     const thumb = document.createElement('button');
-    thumb.className = 'product-thumb' + (i === 0 ? ' active' : '');
+    thumb.className = `product-thumb${i === 0 ? ' active' : ''}`;
     thumb.setAttribute('aria-label', `View image ${i + 1}`);
     const t = document.createElement('img');
     t.src = img.src;
@@ -73,7 +73,7 @@ function buildSizeSelector(sizes) {
   grid.className = 'product-sizes-grid';
   sizes.forEach((size, i) => {
     const btn = document.createElement('button');
-    btn.className = 'product-size-btn' + (i === 0 ? ' active' : '');
+    btn.className = `product-size-btn${i === 0 ? ' active' : ''}`;
     btn.textContent = size;
     btn.dataset.size = size;
     btn.addEventListener('click', () => {
@@ -209,7 +209,9 @@ export default function decorate(block) {
   addBtn.addEventListener('click', () => {
     const size = sizeSelector.querySelector('.product-size-btn.active')?.dataset.size || sizes[0];
     const qty = parseInt(qtySelector.querySelector('input').value, 10) || 1;
-    addToCart({ id: title.toLowerCase().replace(/\s+/g, '-'), name: title, price, size, qty });
+    addToCart({
+      id: title.toLowerCase().replace(/\s+/g, '-'), name: title, price, size, qty,
+    });
     buildCartNotification(title);
     // update header counter
     document.dispatchEvent(new CustomEvent('cart-updated'));
