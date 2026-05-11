@@ -1,3 +1,5 @@
+import { pushEvent } from '../../scripts/datalayer.js';
+
 function getCart() {
   try {
     return JSON.parse(localStorage.getItem('stepup-cart') || '[]');
@@ -84,6 +86,12 @@ function buildLineItem(item, onUpdate) {
   });
 
   removeBtn.addEventListener('click', () => {
+    pushEvent({
+      event: 'remove_from_cart',
+      product: {
+        id: item.id, name: item.name, price: item.price, size: item.size,
+      },
+    });
     item.quantity = 0;
     onUpdate();
   });
@@ -105,6 +113,17 @@ export default function decorate(block) {
       block.append(buildEmptyState());
       return;
     }
+
+    const subtotalForView = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    pushEvent({
+      event: 'cart_view',
+      cart: {
+        items: cart.map((i) => ({
+          id: i.id, name: i.name, price: i.price, quantity: i.quantity, size: i.size,
+        })),
+        subtotal: subtotalForView,
+      },
+    });
 
     const layout = document.createElement('div');
     layout.className = 'cart-layout';

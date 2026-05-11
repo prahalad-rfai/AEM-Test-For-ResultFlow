@@ -1,4 +1,5 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import { pushEvent } from '../../scripts/datalayer.js';
 
 function buildSidebar(products) {
   const sizes = new Set();
@@ -165,6 +166,14 @@ export default function decorate(block) {
 
   block.replaceChildren(layout);
 
+  pushEvent({
+    event: 'product_list_view',
+    list: {
+      name: document.title,
+      items: products.map((p) => ({ id: p.href, name: p.name, price: p.price })),
+    },
+  });
+
   // Filter state
   const activeFilters = { sizes: new Set(), priceMin: null, priceMax: null };
 
@@ -199,6 +208,10 @@ export default function decorate(block) {
       btn.classList.toggle('active');
       if (btn.classList.contains('active')) activeFilters.sizes.add(btn.dataset.size);
       else activeFilters.sizes.delete(btn.dataset.size);
+      pushEvent({
+        event: 'filter_applied',
+        filter: { type: 'size', value: btn.dataset.size, active: btn.classList.contains('active') },
+      });
       applyFilters();
     });
   });
@@ -211,13 +224,28 @@ export default function decorate(block) {
         btn.classList.add('active');
         activeFilters.priceMin = parseFloat(btn.dataset.min);
         activeFilters.priceMax = parseFloat(btn.dataset.max);
+        pushEvent({
+          event: 'filter_applied',
+          filter: {
+            type: 'price', min: activeFilters.priceMin, max: activeFilters.priceMax, label: btn.textContent,
+          },
+        });
       } else {
         activeFilters.priceMin = null;
         activeFilters.priceMax = null;
+        pushEvent({
+          event: 'filter_applied',
+          filter: {
+            type: 'price', min: null, max: null, label: null,
+          },
+        });
       }
       applyFilters();
     });
   });
 
-  sortEl.addEventListener('change', applyFilters);
+  sortEl.addEventListener('change', () => {
+    pushEvent({ event: 'sort_changed', sort: sortEl.value });
+    applyFilters();
+  });
 }

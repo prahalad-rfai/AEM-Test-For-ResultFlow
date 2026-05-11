@@ -1,15 +1,21 @@
+import { pushEvent, parsePrice } from '../../scripts/datalayer.js';
+
 function getCart() {
-  return JSON.parse(localStorage.getItem('aem-cart') || '[]');
+  try {
+    return JSON.parse(localStorage.getItem('stepup-cart') || '[]');
+  } catch {
+    return [];
+  }
 }
 
 function saveCart(cart) {
-  localStorage.setItem('aem-cart', JSON.stringify(cart));
+  localStorage.setItem('stepup-cart', JSON.stringify(cart));
   document.dispatchEvent(new CustomEvent('cart-updated', { detail: cart }));
 }
 
 function updateCartCount() {
   const cart = getCart();
-  const total = cart.reduce((sum, i) => sum + i.qty, 0);
+  const total = cart.reduce((sum, i) => sum + (i.quantity || 0), 0);
   document.querySelectorAll('.nav-cart-count').forEach((el) => {
     el.textContent = total;
   });
@@ -19,7 +25,7 @@ function addToCart(item) {
   const cart = getCart();
   const existing = cart.find((i) => i.id === item.id && i.size === item.size);
   if (existing) {
-    existing.qty += item.qty;
+    existing.quantity += item.quantity;
   } else {
     cart.push({ ...item });
   }
@@ -206,14 +212,28 @@ export default function decorate(block) {
   buyBtn.className = 'button secondary product-buy-btn';
   buyBtn.textContent = 'Buy it Now';
 
+  const productId = title.toLowerCase().replace(/\s+/g, '-');
+  const priceNum = parsePrice(price);
+
+  pushEvent({
+    event: 'product_view',
+    product: { id: productId, name: title, price: priceNum },
+  });
+
   addBtn.addEventListener('click', () => {
     const size = sizeSelector.querySelector('.product-size-btn.active')?.dataset.size || sizes[0];
-    const qty = parseInt(qtySelector.querySelector('input').value, 10) || 1;
-    addToCart({
-      id: title.toLowerCase().replace(/\s+/g, '-'), name: title, price, size, qty,
-    });
+    const quantity = parseInt(qtySelector.querySelector('input').value, 10) || 1;
+    const item = {
+      id: productId,
+      name: title,
+      price: priceNum,
+      size,
+      quantity,
+      image: images[0]?.src || '',
+    };
+    addToCart(item);
+    pushEvent({ event: 'add_to_cart', product: { ...item } });
     buildCartNotification(title);
-    // update header counter
     document.dispatchEvent(new CustomEvent('cart-updated'));
   });
 

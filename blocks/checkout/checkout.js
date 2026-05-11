@@ -1,3 +1,5 @@
+import { pushEvent } from '../../scripts/datalayer.js';
+
 function getCart() {
   try {
     return JSON.parse(localStorage.getItem('stepup-cart') || '[]');
@@ -64,6 +66,15 @@ export default function decorate(block) {
     `;
     return;
   }
+
+  pushEvent({
+    event: 'begin_checkout',
+    cart: {
+      items: cart.map((i) => ({
+        id: i.id, name: i.name, price: i.price, quantity: i.quantity,
+      })),
+    },
+  });
 
   const layout = document.createElement('div');
   layout.className = 'checkout-layout';
@@ -155,6 +166,17 @@ export default function decorate(block) {
     localStorage.setItem('stepup-last-order', JSON.stringify(order));
     localStorage.removeItem('stepup-cart');
     document.dispatchEvent(new CustomEvent('cart-updated', { detail: { cart: [] } }));
+
+    pushEvent({
+      event: 'purchase',
+      order: {
+        id: order.id,
+        total: order.total,
+        items: order.items.map((i) => ({
+          id: i.id, name: i.name, price: i.price, quantity: i.quantity,
+        })),
+      },
+    });
 
     window.location.href = '/order-confirmation';
   });

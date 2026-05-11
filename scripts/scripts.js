@@ -11,6 +11,7 @@ import {
   loadSections,
   loadCSS,
 } from './aem.js';
+import { trackPageView } from './datalayer.js';
 
 /**
  * Builds hero block and prepends to main in a new section.
@@ -137,6 +138,7 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
+    trackPageView();
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
 
