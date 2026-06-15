@@ -59,6 +59,9 @@ function buildGallery(images) {
       mainImg.alt = img.alt;
       thumbs.querySelectorAll('.product-thumb').forEach((b) => b.classList.remove('active'));
       thumb.classList.add('active');
+      // productId resolved later — use closure capture via dataset written after decorate runs
+      const pid = thumb.closest('.product-layout')?.dataset.productId || '';
+      pushEvent({ event: 'image_view', product: { id: pid, image_index: i } });
     });
     thumbs.append(thumb);
   });
@@ -85,6 +88,8 @@ function buildSizeSelector(sizes) {
     btn.addEventListener('click', () => {
       grid.querySelectorAll('.product-size-btn').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
+      const pid = btn.closest('.product-layout')?.dataset.productId || '';
+      pushEvent({ event: 'size_selected', product: { id: pid, size } });
     });
     grid.append(btn);
   });
@@ -238,6 +243,7 @@ export default function decorate(block) {
   });
 
   buyBtn.addEventListener('click', () => {
+    pushEvent({ event: 'buy_now_click', product: { id: productId, name: title, price: priceNum } });
     addBtn.click();
   });
 
@@ -256,5 +262,6 @@ export default function decorate(block) {
 
   block.innerHTML = '';
   block.classList.add('product-layout');
+  block.dataset.productId = productId;
   block.append(gallery, details);
 }

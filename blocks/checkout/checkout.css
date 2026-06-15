@@ -151,6 +151,18 @@
   margin-top: 4px;
 }
 
+.checkout-field input.checkout-field-error {
+  border-color: #c0392b;
+  outline-color: #c0392b;
+}
+
+.checkout-field-hint {
+  display: block;
+  color: #c0392b;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
 @media (width >= 900px) {
   .checkout-layout {
     grid-template-columns: 1fr 380px;

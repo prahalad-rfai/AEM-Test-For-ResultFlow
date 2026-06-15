@@ -150,8 +150,78 @@ export default function decorate(block) {
   layout.append(form, summary);
   block.append(layout);
 
+  function showFieldError(el, msg) {
+    el.classList.add('checkout-field-error');
+    let hint = el.parentElement.querySelector('.checkout-field-hint');
+    if (!hint) {
+      hint = document.createElement('span');
+      hint.className = 'checkout-field-hint';
+      el.after(hint);
+    }
+    hint.textContent = msg;
+  }
+
+  function clearFieldError(el) {
+    el.classList.remove('checkout-field-error');
+    el.parentElement.querySelector('.checkout-field-hint')?.remove();
+  }
+
+  // Clear errors on input
+  form.querySelectorAll('input').forEach((input) => {
+    input.addEventListener('input', () => clearFieldError(input));
+  });
+
+  function validateForm() {
+    const errors = [];
+    const required = ['email', 'firstName', 'lastName', 'address', 'city', 'state', 'zip'];
+    required.forEach((name) => {
+      const el = form.elements[name];
+      if (el && !el.value.trim()) {
+        showFieldError(el, 'This field is required');
+        errors.push({ field: name, reason: 'required' });
+      }
+    });
+
+    const emailEl = form.elements.email;
+    if (emailEl && emailEl.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
+      showFieldError(emailEl, 'Please enter a valid email address');
+      errors.push({ field: 'email', reason: 'invalid_format' });
+    }
+
+    const cardEl = form.elements.card;
+    if (cardEl && !cardEl.value.replace(/\s/g, '').match(/^\d{13,19}$/)) {
+      showFieldError(cardEl, 'Please enter a valid card number');
+      errors.push({ field: 'card', reason: 'invalid_format' });
+    }
+
+    const expiryEl = form.elements.expiry;
+    if (expiryEl && !expiryEl.value.match(/^(0[1-9]|1[0-2])\s*\/\s*\d{2}$/)) {
+      showFieldError(expiryEl, 'Use MM / YY format');
+      errors.push({ field: 'expiry', reason: 'invalid_format' });
+    }
+
+    const cvvEl = form.elements.cvv;
+    if (cvvEl && !cvvEl.value.match(/^\d{3,4}$/)) {
+      showFieldError(cvvEl, 'Enter 3 or 4 digits');
+      errors.push({ field: 'cvv', reason: 'invalid_format' });
+    }
+
+    return errors;
+  }
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+
+    const errors = validateForm();
+    if (errors.length > 0) {
+      pushEvent({
+        event: 'form_error',
+        form: { name: 'checkout', error_count: errors.length, errors },
+      });
+      form.querySelector('.checkout-field-error')?.focus();
+      return;
+    }
+
     const data = Object.fromEntries(new FormData(form));
 
     // Store order for confirmation page

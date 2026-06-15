@@ -1,5 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { pushEvent } from '../../scripts/datalayer.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -146,6 +147,10 @@ export default async function decorate(block) {
           const expanded = navSection.getAttribute('aria-expanded') === 'true';
           toggleAllNavSections(navSections);
           navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+          pushEvent({
+            event: 'nav_section_toggle',
+            nav: { section: navSection.firstChild?.textContent?.trim() || '', expanded: !expanded },
+          });
         }
       });
     });
@@ -157,12 +162,35 @@ export default async function decorate(block) {
   hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
       <span class="nav-hamburger-icon"></span>
     </button>`;
-  hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
+  hamburger.addEventListener('click', () => {
+    const expanding = nav.getAttribute('aria-expanded') !== 'true';
+    pushEvent({ event: 'nav_toggle', nav: { expanded: expanding } });
+    toggleMenu(nav, navSections);
+  });
   nav.prepend(hamburger);
   nav.setAttribute('aria-expanded', 'false');
   // prevent mobile nav behavior on window resize
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+
+  // Track all nav link clicks
+  nav.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      pushEvent({
+        event: 'nav_click',
+        nav: { label: link.textContent.trim(), href: link.getAttribute('href') },
+      });
+    });
+  });
+
+  // Track cart icon click
+  const cartLink = nav.querySelector('.nav-cart-link');
+  if (cartLink) {
+    cartLink.addEventListener('click', () => {
+      const count = parseInt(nav.querySelector('.nav-cart-count')?.textContent || '0', 10);
+      pushEvent({ event: 'cart_icon_click', cart: { count } });
+    });
+  }
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
